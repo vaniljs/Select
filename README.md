@@ -33,18 +33,19 @@ C помощью JavaScript синхронизируется выбор <b>optio
     selectResult.classList.add('select-result');
     selectWrapper.appendChild(selectResult);
 
-    // Создание первого элемента псевдоспискасписка. Здесь будет показан выбранный элемент
+    // Создание первого элемента псевдосписка. Здесь будет показан выбранный элемент
     var firstDiv = document.createElement('div');
     firstDiv.style.display = 'none';
     selectResult.appendChild(firstDiv);
 
-    // Перебор <option> и копирование их в <div>
+    // Перебор <option> и копирование их в <div> и вставка в контейнер для псевдосписка
     option.forEach((item) => {
         let div = document.createElement('div');
         div.innerHTML = item.innerHTML;
         selectResult.appendChild(div);
     });
 
+// Открытие\Закрытие псевдосписка
     document.querySelector('.select-wrapper').addEventListener('click', (e) => {
         selectResult.classList.toggle('select-active')
     });
