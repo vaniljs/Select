@@ -1,6 +1,6 @@
 # Стилизация Select (Javascript)
 
-![alt text](select.png)
+![alt text](img.png)
 
 Так как <b>select</b> не стилизуется напрямую, создается его клон <b>".select-wrapper"</b><br> Будем называть его псевдосписок. <br><br>
 C помощью JavaScript синхронизируется выбор <b>option</b>
