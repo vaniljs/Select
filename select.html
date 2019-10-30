@@ -1,0 +1,139 @@
+<meta charset="UTF-8">
+
+<style>
+
+    .custom-select {
+        /*display: none;*/
+        margin-bottom: 30px;
+    }
+
+    .select-wrapper {
+        display: block;
+        position: relative;
+        background-color: #fff;
+        height: 45px;
+        margin-bottom: 50px;
+    }
+
+    .select-result {
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 40px;
+        overflow: hidden;
+        position: absolute;
+        background-color: #fff;
+    }
+
+    .select-result::after {
+        content: ">";
+        display: block;
+        /*background-image: url("media/right-arrow.svg");*/
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 16px;
+        right: 10px;
+        transform: rotate(90deg);
+    }
+
+    .select-active {
+        height: auto;
+    }
+
+    .select-active .select-result::after {
+        transform: rotate(0deg);
+    }
+
+    .select-result div {
+        padding: 10px;
+        border: 1px solid rgb(212, 212, 212);
+    }
+
+    .select-result div:hover {
+        cursor: pointer;
+        background-color: rgb(230, 230, 230);
+    }
+
+    .display-none {
+        display: none;
+    }
+</style>
+
+<select class="custom-select">
+    <option selected>Выберите тип</option>
+    <option>Landing Page</option>
+    <option>Корпоративный сайт</option>
+    <option>Онлайн магазин</option>
+</select>
+
+<div class="select-wrapper"></div>
+
+
+<script>
+    var option = document.querySelectorAll('.custom-select option'),
+        selectWrapper = document.querySelector('.select-wrapper');
+    var selectResult = document.createElement('div');
+    selectResult.classList.add('select-result');
+    selectWrapper.appendChild(selectResult);
+    var firstDiv = document.createElement('div');
+    firstDiv.style.display = 'none';
+    selectResult.appendChild(firstDiv);
+    option.forEach((item) => {
+        let div = document.createElement('div');
+        div.innerHTML = item.innerHTML;
+        selectResult.appendChild(div);
+    });
+    document.querySelector('.select-wrapper').addEventListener('click', (e) => {
+        selectResult.classList.toggle('select-active')
+    });
+
+    document.querySelectorAll('.select-result div').forEach((item) => {
+        item.addEventListener('click', (e) => {
+            if (selectResult.classList.contains('select-active')) {
+                document.querySelector('.select-result div').innerHTML = e.target.innerHTML;
+                firstDiv.style.display = 'block';
+                option.forEach((item) => {
+                    item.innerHTML === e.target.innerHTML ? item.selected = true : false;
+                });
+            }
+        });
+    });
+
+
+    // Fix Убирает дублирование выбранного элемента в списке псевдосписка
+    document.querySelectorAll('.select-result div').forEach((item) => {
+        item.addEventListener('click', (e) => {
+            if (selectResult.classList.contains('select-active')) {
+                document.querySelectorAll('.select-result div').forEach((el) => {
+                    el.classList.remove('display-none')
+                });
+                e.target.classList.add('display-none');
+            }
+        })
+    });
+
+    // Fix Закрывает псевдосписок при клике вне его области
+    document.addEventListener('click', function (e) {
+        if (e.target.parentNode === document || !e.target.parentNode.classList.contains('select-active')) {
+            selectResult.classList.remove('select-active');
+        }
+    });
+
+
+    // BONUS
+    // При клике на <option> выбирается соответствующий элемент в псевдосписке
+    document.querySelector('.custom-select').addEventListener('change', (e) => {
+        document.querySelectorAll('.select-result div').forEach((item) => {
+            item.classList.remove('display-none')
+        });
+        document.querySelectorAll('.select-result div').forEach((item) => {
+            if (item.innerHTML === e.target.options[e.target.selectedIndex].innerHTML) {
+                item.classList.add('display-none');
+                document.querySelector('.select-result div').innerHTML = item.innerHTML;
+                firstDiv.style.display = 'block';
+            }
+        })
+    });
+
+</script>
