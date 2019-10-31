@@ -25,18 +25,10 @@
         background-color: #fff;
     }
 
-    .select-result::after {
-        content: ">";
-        display: block;
-        /*background-image: url("media/right-arrow.svg");*/
-        width: 20px;
-        height: 20px;
-        position: absolute;
-        top: 16px;
-        right: 10px;
-        transform: rotate(90deg);
+    .select-result:hover {
+        cursor: pointer;
     }
-
+    
     .select-active {
         height: auto;
     }
@@ -51,8 +43,28 @@
     }
 
     .select-result div:hover {
-        cursor: pointer;
         background-color: rgb(230, 230, 230);
+    }
+
+    .select-wrapper span {
+        font-size: 20px;
+        color: black;
+        position: absolute;
+        top: 8px;
+        right: 15px;
+        display: block;
+        transform: rotate(90deg);
+        transition: .3s;
+        pointer-events: none;
+    }
+
+    .select-wrapper span:hover {
+        cursor: pointer;
+    }
+
+    .select-active span {
+        transform: rotate(0deg);
+        transition: .3s;
     }
 
     .display-none {
@@ -73,26 +85,51 @@
 <script>
     var option = document.querySelectorAll('.custom-select option'),
         selectWrapper = document.querySelector('.select-wrapper');
+
+    // Создание контейнера для псевдосписка
     var selectResult = document.createElement('div');
     selectResult.classList.add('select-result');
     selectWrapper.appendChild(selectResult);
+
+    // Создание первого элемента псевдосписка. Здесь будет показан выбранный элемент
     var firstDiv = document.createElement('div');
     firstDiv.style.display = 'none';
     selectResult.appendChild(firstDiv);
+
+    // Создание интуитивной иконки для псевдосписка
+    var iconSelect = document.createElement('span');
+    iconSelect.innerHTML = ">";
+    selectResult.appendChild(iconSelect);
+
+        document.querySelectorAll('.select-result div').forEach((item) => {
+        item.addEventListener('onmouseover', (e) => {
+            console.log(e.target);
+            e.target.style.backgroundColor = 'red';
+        })
+    });
+
+    // Перебор <option> и копирование их в <div> и вставка в контейнер для псевдосписка
     option.forEach((item) => {
         let div = document.createElement('div');
         div.innerHTML = item.innerHTML;
         selectResult.appendChild(div);
     });
+
+    // Открытие\Закрытие псевдосписка
     document.querySelector('.select-wrapper').addEventListener('click', (e) => {
         selectResult.classList.toggle('select-active')
     });
 
+    // Клик на каждом элементе псевдосписка
     document.querySelectorAll('.select-result div').forEach((item) => {
         item.addEventListener('click', (e) => {
+
+            // Если псевдосписок раскрыт, то вставляем выбранный элемент на первую позицию и закрываем псевдосписок
             if (selectResult.classList.contains('select-active')) {
                 document.querySelector('.select-result div').innerHTML = e.target.innerHTML;
                 firstDiv.style.display = 'block';
+
+                // <option selected> если совпадает содержимое с выбранным элементом псевдосписка
                 option.forEach((item) => {
                     item.innerHTML === e.target.innerHTML ? item.selected = true : false;
                 });
@@ -113,8 +150,24 @@
         })
     });
 
+    // Fix Убирает дублирование только первого элемента псевдосписка, который является заглушкой по умолчанию
+    /* document.querySelectorAll('.select-result div').forEach((item) => {
+         item.addEventListener('click', (e) => {
+             if (selectResult.classList.contains('select-active') && e.target.innerHTML === document.querySelector('.custom-select option').innerHTML) {
+                 e.target.classList.add('display-none');
+             } else if (selectResult.classList.contains('select-active') && e.target.innerHTML !== document.querySelector('.custom-select option').innerHTML) {
+                 document.querySelectorAll('.select-result div')[1].classList.remove('display-none')
+             }
+         })
+     });*/
+
+
     // Fix Закрывает псевдосписок при клике вне его области
     document.addEventListener('click', function (e) {
+
+        // ВАЖНО!
+        // "ИЛИ" срабатывает после первого совпадения и дальше не проверяет
+        // Поэтому, если убрать сравнение с document, то проверяется второе условие и при клике за пределы <html> появится ошибка typeError, так как у document нет метода .contains
         if (e.target.parentNode === document || !e.target.parentNode.classList.contains('select-active')) {
             selectResult.classList.remove('select-active');
         }
@@ -135,5 +188,4 @@
             }
         })
     });
-
 </script>
