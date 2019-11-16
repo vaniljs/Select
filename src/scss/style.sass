@@ -1,0 +1,54 @@
+.custom-select
+  margin-bottom: 30px
+
+.select-wrapper
+  display: block
+  position: relative
+  background-color: #fff
+  height: 45px
+  margin-bottom: 50px
+
+.select-result
+  top: 0
+  left: 0
+  width: 280px
+  height: 40px
+  overflow: hidden
+  position: absolute
+  background-color: #fff
+  &:hover
+    cursor: pointer
+
+.select-active
+  height: auto
+  .select-result::after
+    transform: rotate(0deg)
+
+.select-result div
+  padding: 10px
+  border: 1px solid rgb(212, 212, 212)
+  &:hover
+    background-color: rgb(230, 230, 230)
+
+.select-wrapper span
+  font-size: 20px
+  color: black
+  position: absolute
+  top: 8px
+  right: 15px
+  display: block
+  transform: rotate(90deg)
+  transition: .3s
+  pointer-events: none
+
+  &:hover
+    cursor: pointer
+
+.select-active span
+  transform: rotate(0deg)
+  transition: .3s
+
+.display-none
+  display: none
+
+  
